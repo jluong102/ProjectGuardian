@@ -83,7 +83,7 @@ func (this LogTool) AppendFile(msg string) {
 		filename += "_" + time.Now().Format("2006-02-01") 
 	}
 
-	filename += ".log"
+	filename += ".log" // End all log files with ".log"
 	stream, err := os.OpenFile(filename, os.O_APPEND | os.O_CREATE | os.O_WRONLY, 0744)
 
 	if err != nil {
