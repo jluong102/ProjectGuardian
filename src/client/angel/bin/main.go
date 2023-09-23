@@ -1,6 +1,6 @@
 package main
 
-import "log"
+import "fmt"
 import "flag"
 import "os"
 
@@ -27,13 +27,13 @@ func main() {
 	logTool := logger.CreateLogger("angel")
 	err := checkArguments(cmdArgs)
 	
-	logTool.WriteInfo("Inializing...")
-	log.Printf("Intializing...")
+	logTool.WriteInfo("Intializing...")
 
 	if err != nil {
-		log.Printf("Startup Error: %s", err)
+		logTool.WriteError(fmt.Sprintf("Startup Error: %s", err))
 		os.Exit(1)
 	}
 
-	log.Printf("Checking master config: %s", cmdArgs.master)
+
+	logTool.WriteInfo(fmt.Sprintf("Checking master config: %s", cmdArgs.master))
 }

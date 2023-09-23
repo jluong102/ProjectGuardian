@@ -25,7 +25,7 @@ const (
 
 // PUBLIC
 func (this LogTool) WriteInfo(msg string) {
-	now := time.Now().Format(time.ANSIC)
+	now := time.Now().Format(time.UnixDate)
 	msg = fmt.Sprintf("[%s][INFO]%s\n", now, msg)
 
 	if this.Print {
@@ -33,12 +33,12 @@ func (this LogTool) WriteInfo(msg string) {
 	}
 
 	if (this.LogLevel & LOG_INFO) != 0 {
-		AppendFile(this.LogPath + this.Filename, msg)
+		this.AppendFile(msg)
 	}
 }
 
 func (this LogTool) WriteWarning(msg string) {
-	now := time.Now().Format(time.ANSIC)
+	now := time.Now().Format(time.UnixDate)
 	msg = fmt.Sprintf("[%s][WARNING]%s\n", now, msg)
 
 	if this.Print {
@@ -46,12 +46,12 @@ func (this LogTool) WriteWarning(msg string) {
 	}
 
 	if (this.LogLevel & LOG_WARNING) != 0 {
-		AppendFile(this.LogPath + this.Filename, msg)
+		this.AppendFile(msg)
 	}
 }
 
 func (this LogTool) WriteError(msg string) {
-	now :=  time.Now().Format(time.ANSIC)
+	now :=  time.Now().Format(time.UnixDate)
 	msg = fmt.Sprintf("[%s][ERROR]%s\n", now, msg)
 
 	if this.Print {
@@ -59,12 +59,12 @@ func (this LogTool) WriteError(msg string) {
 	}
 
 	if (this.LogLevel & LOG_ERROR) != 0 {
-		AppendFile(this.LogPath + this.Filename, msg)
+		this.AppendFile(msg)
 	}
 }
 
 func (this LogTool) WriteDebug(msg string) {
-	now := time.Now().Format(time.ANSIC)
+	now := time.Now().Format(time.UnixDate)
 	msg = fmt.Sprintf("[%s][DEBUG]%s\n", now, msg)
 
 	if this.Print {
@@ -72,8 +72,33 @@ func (this LogTool) WriteDebug(msg string) {
 	}
 
 	if (this.LogLevel & LOG_DEBUG) != 0 {
-		AppendFile(this.LogPath + this.Filename, msg)
+		this.AppendFile(msg)
 	}
+}
+
+func (this LogTool) AppendFile(msg string) {
+	filename := this.LogPath + this.Filename
+
+	if this.AutoRotate {
+		filename += "_" + time.Now().Format("2006-02-01") 
+	}
+
+	filename += ".log"
+	stream, err := os.OpenFile(filename, os.O_APPEND | os.O_CREATE | os.O_WRONLY, 0744)
+
+	if err != nil {
+		now := time.Now().Format(time.UnixDate)
+		fmt.Printf("[%s][FAIL]Error: %s\n", now, err)
+	} else {
+		_, err := stream.Write([]byte(msg))
+
+		if err != nil {
+			now := time.Now().Format(time.UnixDate)
+			fmt.Printf("[%s][FAIL]Error: %s\n", now, err)
+		}
+	}
+
+	stream.Close()
 }
 
 // Constructor
@@ -88,22 +113,4 @@ func CreateLogger(filename string) *LogTool {
 	logger.Print = true
 
 	return logger
-}
-
-func AppendFile(filename string, msg string) {
-	stream, err := os.OpenFile(filename, os.O_APPEND | os.O_CREATE | os.O_WRONLY, 0755)
-
-	if err != nil {
-		now := time.Now().Format(time.ANSIC)
-		fmt.Printf("[%s][FAIL]Error: %s", now, err)
-	} else {
-		_, err := stream.Write([]byte(msg))
-
-		if err != nil {
-			now := time.Now().Format(time.ANSIC)
-			fmt.Printf("[%s][FAIL]Error: %s", now, err)
-		}
-	}
-
-	stream.Close()
 }
