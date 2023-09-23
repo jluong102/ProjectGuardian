@@ -1,0 +1,7 @@
+package main
+
+const (
+	ARGUMENT_PARSE_ERROR = 1
+	MASTER_CONFIG_ERROR = 2
+	JSON_PARSE_ERROR = 3
+)
