@@ -17,10 +17,12 @@ type LogTool struct {
 }
 
 const (
+	LOG_NONE = 0
 	LOG_DEBUG = 1
 	LOG_INFO = 1 << 1
 	LOG_WARNING = 2 << 1
 	LOG_ERROR = 3 << 1
+	LOG_SUCCESS = 4 << 1
 )
 
 // PUBLIC
@@ -72,6 +74,19 @@ func (this LogTool) WriteDebug(msg string) {
 	}
 
 	if (this.LogLevel & LOG_DEBUG) != 0 {
+		this.AppendFile(msg)
+	}
+}
+
+func (this LogTool) WriteSuccess(msg string) {
+	now := time.Now().Format(time.UnixDate)
+	msg = fmt.Sprintf("[%s][SUCCESS]%s\n", now, msg)
+
+	if this.Print {
+		fmt.Printf(msg)
+	}
+
+	if (this.LogLevel & LOG_SUCCESS) != 0 {
 		this.AppendFile(msg)
 	}
 }
