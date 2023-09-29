@@ -122,7 +122,7 @@ func CreateLogger(filename string) *LogTool {
 	logger.Filename = filename
 
 	// Set defaults 
-	logger.LogPath = "/var/guardian/misc/"
+	logger.LogPath = "/var/guardian/misc/logs"
 	logger.LogLevel = LOG_INFO | LOG_WARNING | LOG_ERROR
 	logger.AutoRotate = true
 	logger.Print = true

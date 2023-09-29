@@ -1,6 +1,6 @@
 module github.com/jluong102/projectguardian/angel
 
-replace github.com/jluong102/projectguardian/logger => ./src/shared/logger
+replace github.com/jluong102/projectguardian/logger => ../../../shared/logger
 
 go 1.15
 
