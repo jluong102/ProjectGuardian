@@ -1,4 +1,9 @@
 {
-	"log_path": "~/",
-	"debug": false
+	"log_path": "./",
+	"debug": false,
+	"no_log": false,
+	"no_info": false,
+	"no_warning": false,
+	"no_error": false,
+	"no_success": false
 }

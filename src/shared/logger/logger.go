@@ -69,7 +69,7 @@ func (this LogTool) WriteDebug(msg string) {
 	now := time.Now().Format(time.UnixDate)
 	msg = fmt.Sprintf("[%s][DEBUG]%s\n", now, msg)
 
-	if this.Print {
+	if this.Print && (this.LogLevel & LOG_DEBUG) != 0 {
 		fmt.Printf(msg)
 	}
 

@@ -60,17 +60,40 @@ func main() {
 	}
 
 	logTool.WriteInfo(fmt.Sprintf("Attempting to load master config: %s", cmdArgs.master))
-	data, err := fileRead(cmdArgs.master)
+	rawMaster, err := fileRead(cmdArgs.master)
 
 	if err == nil {
 		logTool.WriteSuccess(fmt.Sprintf("Opened %s", cmdArgs.master))
 		logTool.WriteInfo(fmt.Sprintf("Attempting to parse json from master config: %s", cmdArgs.master))
 
 		var masterConfig *Master = new(Master)
-		err := json.Unmarshal(data, masterConfig)
+		SetMasterDefaults(masterConfig)
+		err := json.Unmarshal(rawMaster, masterConfig)
 
 		if err == nil {
 			logTool.WriteSuccess(fmt.Sprintf("Parsed json from master config: %s", cmdArgs.master))
+			logTool.WriteInfo("Loading master settings")
+
+			if cmdArgs.debug { 
+				masterConfig.Debug = cmdArgs.debug
+			}
+
+			err := SetupMaster(masterConfig, logTool)
+
+			if err == nil {
+				logTool.WriteSuccess("Master settings loaded")
+				logTool.WriteDebug(fmt.Sprintf("Log Path: %s", masterConfig.LogPath))
+				logTool.WriteDebug(fmt.Sprintf("Debug: %t", masterConfig.Debug))
+				logTool.WriteDebug(fmt.Sprintf("Disable Log Info: %t", masterConfig.NoInfo))
+				logTool.WriteDebug(fmt.Sprintf("Disable Log Warning: %t", masterConfig.NoWarning))
+				logTool.WriteDebug(fmt.Sprintf("Disable Log Error: %t", masterConfig.NoError))
+				logTool.WriteDebug(fmt.Sprintf("Disable Log Success: %t", masterConfig.NoSuccess))
+
+			} else {
+				logTool.WriteError(fmt.Sprintf("Master settings error: %s", err))
+				os.Exit(MASTER_SETTINGS_ERROR)
+			}
+
 		} else {
 			logTool.WriteError(fmt.Sprintf("Unable to parse json from master config: %s", err))
 			os.Exit(JSON_PARSE_ERROR)
