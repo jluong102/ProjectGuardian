@@ -53,3 +53,11 @@ func SetupMaster(masterData *Master, logTool *logger.LogTool) error {
 
 	return nil
 }
+
+func SetupWatch(watchData *Watch) error {
+	if watchData.Interval < 1 {
+		return fmt.Errorf("Interval must be set to 1 minute or longer")
+	}
+
+	return nil
+}

@@ -88,15 +88,29 @@ func main() {
 				logTool.WriteDebug(fmt.Sprintf("Disable Log Warning: %t", masterConfig.NoWarning))
 				logTool.WriteDebug(fmt.Sprintf("Disable Log Error: %t", masterConfig.NoError))
 				logTool.WriteDebug(fmt.Sprintf("Disable Log Success: %t", masterConfig.NoSuccess))
+				logTool.WriteDebug(fmt.Sprintf("Disable Log Console: %t", masterConfig.NoConsole))
 
 				for i, j := range masterConfig.Watches {
-					logTool.WriteDebug(fmt.Sprintf("Watch %d -> Name: %s ", i, j.Name))
+					err := SetupWatch(j)
+
+					if err == nil {
+						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Name: %s", i, j.Name))
+						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Interval: %d minutes", i, j.Interval))
+						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Debug: %t", i, j.Debug))
+						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Disable Log Info: %t", i, j.NoInfo))
+						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Disable Log Warning: %t", i, j.NoWarning))
+						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Disable Log Error: %t", i, j.NoError))
+						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Disable Log Success: %t", i, j.NoSuccess))
+						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Disable Log Console: %t", i, j.NoConsole))
+					} else {
+						logTool.WriteError(fmt.Sprintf("Watch settings %d error: %s", i, err))
+						os.Exit(WATCH_SETTINGS_ERROR)
+					}
 				}
 			} else {
 				logTool.WriteError(fmt.Sprintf("Master settings error: %s", err))
 				os.Exit(MASTER_SETTINGS_ERROR)
 			}
-
 		} else {
 			logTool.WriteError(fmt.Sprintf("Unable to parse json from master config: %s", err))
 			os.Exit(JSON_PARSE_ERROR)
