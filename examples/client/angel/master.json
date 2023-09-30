@@ -1,9 +1,15 @@
 {
-	"log_path": "./",
-	"debug": false,
-	"no_log": false,
-	"no_info": false,
-	"no_warning": false,
-	"no_error": false,
-	"no_success": false
+  "log_path": "./",
+  "debug": false,
+  "no_log": false,
+  "no_info": false,
+  "no_warning": false,
+  "no_error": false,
+  "no_success": false,
+  "no_console": false,
+  "watches": [
+    {
+      "name": "test"
+    }
+  ]
 }

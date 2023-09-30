@@ -1,6 +1,6 @@
 package main
 
-// import "fmt"
+import "fmt"
 
 import "github.com/jluong102/projectguardian/logger"
 
@@ -44,6 +44,11 @@ func SetupMaster(masterData *Master, logTool *logger.LogTool) error {
 		}
 
 		logTool.LogPath = masterData.LogPath
+		logTool.Print = !masterData.NoConsole
+	}
+
+	if len(masterData.Watches) < 1 {
+		return fmt.Errorf("No watches found")
 	}
 
 	return nil

@@ -8,4 +8,10 @@ type Master struct {
 	NoSuccess bool `json:"no_success"` // Optional
 	NoWarning bool `json:"no_warning"` // Optional
 	NoError bool `json:"no_error"` // Optional
+	NoConsole bool `json:"no_console"` // Optional
+	Watches []Watch `json:"watches"` // Required
+}
+
+type Watch struct {
+	Name string `json:"name"` // Required
 }

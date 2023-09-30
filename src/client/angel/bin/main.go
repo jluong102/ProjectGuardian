@@ -89,6 +89,9 @@ func main() {
 				logTool.WriteDebug(fmt.Sprintf("Disable Log Error: %t", masterConfig.NoError))
 				logTool.WriteDebug(fmt.Sprintf("Disable Log Success: %t", masterConfig.NoSuccess))
 
+				for i, j := range masterConfig.Watches {
+					logTool.WriteDebug(fmt.Sprintf("Watch %d -> Name: %s ", i, j.Name))
+				}
 			} else {
 				logTool.WriteError(fmt.Sprintf("Master settings error: %s", err))
 				os.Exit(MASTER_SETTINGS_ERROR)
