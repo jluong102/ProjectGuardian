@@ -54,10 +54,49 @@ func SetupMaster(masterData *Master, logTool *logger.LogTool) error {
 	return nil
 }
 
+func ShowMasterSettings(logTool *logger.LogTool, masterSettings *Master) {
+	output := fmt.Sprintf("Log Path: %s", masterSettings.LogPath)
+	output += fmt.Sprintf("\n\t -> Debug: %t", masterSettings.Debug)
+	output += fmt.Sprintf("\n\t -> Disable Log Info: %t", masterSettings.NoInfo)
+	output += fmt.Sprintf("\n\t -> Disable Log Warning: %t", masterSettings.NoWarning)
+	output += fmt.Sprintf("\n\t -> Disable Log Error: %t", masterSettings.NoError)
+	output += fmt.Sprintf("\n\t -> Disable Log Success: %t", masterSettings.NoSuccess)
+	output += fmt.Sprintf("\n\t -> Disable Log Console: %t", masterSettings.NoConsole)
+
+	logTool.WriteDebug(output)
+}
+
+/*func SetWatchDefaults(watchData *Watch) {
+	watchData.Name = ""
+	watchData.Interval = -1
+	watchData.LogPath = "/var/guardian/angel/logs"
+	watchData.Debug = false
+	watchData.NoLog = false
+	watchData.NoInfo = false
+	watchData.NoLog = false
+	watchData.NoSuccess = false
+	watchData.NoWarning = false
+	watchData.NoError = false
+	watchData.NoConsole = false	
+}*/
+
 func SetupWatch(watchData *Watch) error {
 	if watchData.Interval < 1 {
 		return fmt.Errorf("Interval must be set to 1 minute or longer")
 	}
 
 	return nil
+}
+
+func ShowWatchSettings(logTool *logger.LogTool, watchSettings *Watch) {
+	output := fmt.Sprintf("Name: %s", watchSettings.Name)
+	output += fmt.Sprintf("\n\t -> Interval: %d minutes", watchSettings.Interval)
+	output += fmt.Sprintf("\n\t -> Debug: %t", watchSettings.Debug)
+	output += fmt.Sprintf("\n\t -> Disable Log Info: %t", watchSettings.NoInfo)
+	output += fmt.Sprintf("\n\t -> Disable Log Warning: %t", watchSettings.NoWarning)
+	output += fmt.Sprintf("\n\t -> Disable Log Error: %t", watchSettings.NoError)
+	output += fmt.Sprintf("\n\t -> Disable Log Success: %t", watchSettings.NoSuccess)
+	output += fmt.Sprintf("\n\t -> Disable Log Console: %t", watchSettings.NoConsole)
+
+	logTool.WriteDebug(output)
 }

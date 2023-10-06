@@ -21,10 +21,11 @@ type cmdline struct {
 }
 
 func checkArguments(cmdArgs *cmdline) error {
-	currentPath, err := os.Executable() // For setting default paths
+	// currentPath, err := os.Executable() // For setting default paths
+	var err error = nil 
 
 	// Parse cmdline arguments
-	flag.StringVar(&cmdArgs.master, "config", currentPath + "/config.json", "Master config file")
+	flag.StringVar(&cmdArgs.master, "config", "/etc/guardian/angel/master.json", "Master config file")
 	flag.BoolVar(&cmdArgs.debug, "debug", false, "Debugging output")
 	flag.Parse()
 
@@ -82,30 +83,25 @@ func main() {
 
 			if err == nil {
 				logTool.WriteSuccess("Master settings loaded")
-				logTool.WriteDebug(fmt.Sprintf("Log Path: %s", masterConfig.LogPath))
-				logTool.WriteDebug(fmt.Sprintf("Debug: %t", masterConfig.Debug))
-				logTool.WriteDebug(fmt.Sprintf("Disable Log Info: %t", masterConfig.NoInfo))
-				logTool.WriteDebug(fmt.Sprintf("Disable Log Warning: %t", masterConfig.NoWarning))
-				logTool.WriteDebug(fmt.Sprintf("Disable Log Error: %t", masterConfig.NoError))
-				logTool.WriteDebug(fmt.Sprintf("Disable Log Success: %t", masterConfig.NoSuccess))
-				logTool.WriteDebug(fmt.Sprintf("Disable Log Console: %t", masterConfig.NoConsole))
-
+				ShowMasterSettings(logTool, masterConfig)
+				
+				// Validate watches
 				for i, j := range masterConfig.Watches {
 					err := SetupWatch(j)
 
 					if err == nil {
-						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Name: %s", i, j.Name))
-						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Interval: %d minutes", i, j.Interval))
-						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Debug: %t", i, j.Debug))
-						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Disable Log Info: %t", i, j.NoInfo))
-						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Disable Log Warning: %t", i, j.NoWarning))
-						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Disable Log Error: %t", i, j.NoError))
-						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Disable Log Success: %t", i, j.NoSuccess))
-						logTool.WriteDebug(fmt.Sprintf("Watch %d -> Disable Log Console: %t", i, j.NoConsole))
+						logTool.WriteDebug(fmt.Sprintf("Watch %d", i))
+						ShowWatchSettings(logTool, j)
 					} else {
 						logTool.WriteError(fmt.Sprintf("Watch settings %d error: %s", i, err))
 						os.Exit(WATCH_SETTINGS_ERROR)
 					}
+				}
+
+				// Start watch threads 
+				for _, i := range masterConfig.Watches {
+					logTool.WriteInfo(fmt.Sprintf("Starting watch thread: %s", i.Name))
+					go StartWatch(i)
 				}
 			} else {
 				logTool.WriteError(fmt.Sprintf("Master settings error: %s", err))
