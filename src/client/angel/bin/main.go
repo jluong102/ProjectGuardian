@@ -12,6 +12,7 @@ import "flag"
 import "os"
 import "io/ioutil"
 import "encoding/json"
+import "sync"
 
 import "github.com/jluong102/projectguardian/logger"
 
@@ -84,6 +85,7 @@ func main() {
 			if err == nil {
 				logTool.WriteSuccess("Master settings loaded")
 				ShowMasterSettings(logTool, masterConfig)
+				var wg sync.WaitGroup
 				
 				// Validate watches
 				for i, j := range masterConfig.Watches {
@@ -100,9 +102,20 @@ func main() {
 
 				// Start watch threads 
 				for _, i := range masterConfig.Watches {
+					// Override debug settings 
+					if cmdArgs.debug {
+						i.Debug = cmdArgs.debug
+					}
+
+					wg.Add(1)
 					logTool.WriteInfo(fmt.Sprintf("Starting watch thread: %s", i.Name))
-					go StartWatch(i)
+					go func(watch *Watch) { 
+						StartWatch(watch)
+						wg.Done() 
+					}(i)
 				}
+
+				wg.Wait()
 			} else {
 				logTool.WriteError(fmt.Sprintf("Master settings error: %s", err))
 				os.Exit(MASTER_SETTINGS_ERROR)

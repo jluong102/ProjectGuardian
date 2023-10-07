@@ -23,4 +23,7 @@ type Watch struct {
 	NoWarning bool `json:"no_warning"` // Optional
 	NoError bool `json:"no_error"` // Optional
 	NoConsole bool `json:"no_console"` // Optional
+	SuccessCodes []int32 `json:"success_codes"` // Required
+	FailureCodes []int32 `json:"failure_codes"` // Required
+	CheckScript string `json:"check_script"` // Required
 }

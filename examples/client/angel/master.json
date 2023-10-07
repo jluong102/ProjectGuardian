@@ -10,14 +10,22 @@
   "watches": [
     {
       "name": "test",
+      "log_path": "./",
       "interval": 5,
       "debug": false,
-	  "no_log": false,
-	  "no_info": false,
-	  "no_warning": false,
-	  "no_error": false,
-	  "no_success": false,
-	  "no_console": false
+      "no_log": false,
+      "no_info": false,
+      "no_warning": false,
+      "no_error": false,
+      "no_success": false,
+      "no_console": false,
+      "success_codes": [
+        0
+      ],
+      "failure_codes": [
+        1
+      ],
+      "check_script": "./example/client/angel/check.sh"
     }
   ]
 }

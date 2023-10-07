@@ -90,6 +90,7 @@ func SetupWatch(watchData *Watch) error {
 
 func ShowWatchSettings(logTool *logger.LogTool, watchSettings *Watch) {
 	output := fmt.Sprintf("Name: %s", watchSettings.Name)
+	output += fmt.Sprintf("\n\t -> Log Path: %s", watchSettings.LogPath)
 	output += fmt.Sprintf("\n\t -> Interval: %d minutes", watchSettings.Interval)
 	output += fmt.Sprintf("\n\t -> Debug: %t", watchSettings.Debug)
 	output += fmt.Sprintf("\n\t -> Disable Log Info: %t", watchSettings.NoInfo)
