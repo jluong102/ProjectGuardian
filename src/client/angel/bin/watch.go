@@ -51,7 +51,7 @@ func RunCheck(script string) int {
 		if exitCode, ok := err.(*exec.ExitError); ok {
 			return exitCode.ExitCode()
 		}
-	}
+	} 
 
 	return 0
 }
@@ -60,4 +60,7 @@ func StartWatch(watchSettings *Watch) {
 	logTool := newLogger(watchSettings)
 
 	logTool.WriteInfo(fmt.Sprintf("%s => Running check script: %s", watchSettings.Name, watchSettings.CheckScript))
+	exitCode := RunCheck(watchSettings.CheckScript)
+
+	fmt.Printf("Status %d\n", exitCode)
 }

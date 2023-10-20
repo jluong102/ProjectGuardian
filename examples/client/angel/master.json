@@ -25,7 +25,7 @@
       "failure_codes": [
         1
       ],
-      "check_script": "./example/client/angel/check.sh"
+      "check_script": "./examples/client/angel/check.sh"
     }
   ]
 }
