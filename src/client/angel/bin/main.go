@@ -109,6 +109,7 @@ func main() {
 
 					wg.Add(1)
 					logTool.WriteInfo(fmt.Sprintf("Starting watch thread: %s", i.Name))
+					
 					go func(watch *Watch) { 
 						StartWatch(watch)
 						wg.Done() 
