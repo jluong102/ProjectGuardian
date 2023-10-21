@@ -2,6 +2,7 @@ package main
 
 import "os/exec"
 import "fmt"
+import "time"
 
 import "github.com/jluong102/projectguardian/logger"
 // import "github.com/jluong102/projectguardian/permissions"
@@ -67,13 +68,40 @@ func runCheck(script string) int {
 func StartWatch(watchSettings *Watch) {
 	logTool := newLogger(watchSettings)
 
-	// Confirm check file exists and is executable
-	if err := CheckExecutableScript(watchSettings.CheckScript); err == nil {
-		logTool.WriteInfo(fmt.Sprintf("%s => Running check script: %s", watchSettings.Name, watchSettings.CheckScript))
-		exitCode := runCheck(watchSettings.CheckScript)
+	// Keep running until we tell it to stop
+	for {
+		// Confirm check file exists and is executable
+		if err := CheckExecutableScript(watchSettings.CheckScript); err == nil {
+			logTool.WriteInfo(fmt.Sprintf("%s => Running check script: %s", watchSettings.Name, watchSettings.CheckScript))
+			exitCode := runCheck(watchSettings.CheckScript)
+			codeFound := false
 
-		fmt.Printf("Status %d\n", exitCode)
-	} else {
-		logTool.WriteError(fmt.Sprintf("Unable to execute script: %s", err))
+			fmt.Printf("Status %d\n", exitCode)
+
+			for _, i := range watchSettings.SuccessCodes {
+				if int(i) == exitCode {
+					codeFound = true
+					fmt.Printf("good\n")
+					time.Sleep(time.Duration(watchSettings.Interval) * time.Minute)
+					break
+				}
+			}
+
+			// Only check failure codes if no success codes are found
+			if !codeFound {
+				for _, i := range watchSettings.FailureCodes {
+					if int(i) == exitCode {
+						fmt.Printf("Bad\n")
+						time.Sleep(time.Duration(watchSettings.Interval) * time.Minute)
+						break
+					}
+				}
+			}
+		} else {
+			logTool.WriteError(fmt.Sprintf("Unable to execute script: %s", err))
+
+			// temporary 
+			return
+		}
 	}
 }
