@@ -27,6 +27,8 @@ func IsExecutableCurrentUser(info os.FileInfo) bool {
 
 		if uid, _ := strconv.ParseUint(user.Uid, 10, 32); IsExecutableOwner(mode) && info.Sys().(*syscall.Stat_t).Uid == uint32(uid) {
 			return true
+		} else if gid, _ := strconv.ParseUint(user.Gid, 10, 32); IsExecutableGroup(mode) && info.Sys().(*syscall.Stat_t).Gid == uint32(gid) {
+			return true
 		}
 	}
 
