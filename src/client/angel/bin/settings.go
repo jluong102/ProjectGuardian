@@ -1,8 +1,10 @@
 package main
 
 import "fmt"
+import "os"
 
 import "github.com/jluong102/projectguardian/logger"
+import "github.com/jluong102/projectguardian/permissions"
 
 // Use this to setup inital values as needed
 // then overwrite with user provided settings from json
@@ -100,4 +102,16 @@ func ShowWatchSettings(logTool *logger.LogTool, watchSettings *Watch) {
 	output += fmt.Sprintf("\n\t -> Disable Log Console: %t", watchSettings.NoConsole)
 
 	logTool.WriteDebug(output)
+}
+
+func CheckExecutableScript(filename string) error {
+	if info, err := os.Stat(filename); os.IsNotExist(err) {
+		return err
+	} else {
+		if !permissions.IsExecutableCurrentUser(info) {
+			return fmt.Errorf("Execution permission denied: %s", filename)
+		}
+	}
+
+	return nil
 }

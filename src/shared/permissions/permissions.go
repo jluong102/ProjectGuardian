@@ -17,6 +17,7 @@ func IsExecutableGroup(mode os.FileMode) bool {
 	return mode & 0010 != 0
 }
 
+// Probably a better way to check the uid/gid then this 
 func IsExecutableCurrentUser(info os.FileInfo) bool {
 	mode := info.Mode()
 

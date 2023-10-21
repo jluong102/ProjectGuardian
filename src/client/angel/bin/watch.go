@@ -1,11 +1,10 @@
 package main 
 
-import "os"
 import "os/exec"
 import "fmt"
 
 import "github.com/jluong102/projectguardian/logger"
-import "github.com/jluong102/projectguardian/permissions"
+// import "github.com/jluong102/projectguardian/permissions"
 
 func newLogger(watchSettings *Watch) *logger.LogTool {
 	// Create new logger for thread
@@ -67,23 +66,14 @@ func runCheck(script string) int {
 
 func StartWatch(watchSettings *Watch) {
 	logTool := newLogger(watchSettings)
-	logTool.WriteInfo(fmt.Sprintf("%s => Running check script: %s", watchSettings.Name, watchSettings.CheckScript))
 
-	// Confirm check file exists
-	if info, err := os.Stat(watchSettings.CheckScript); os.IsNotExist(err) {
-		logTool.WriteError(fmt.Sprintf("Check script not found: %s", err))
-		logTool.WriteInfo(fmt.Sprintf("Exiting watch %s", watchSettings.Name))
+	// Confirm check file exists and is executable
+	if err := CheckExecutableScript(watchSettings.CheckScript); err == nil {
+		logTool.WriteInfo(fmt.Sprintf("%s => Running check script: %s", watchSettings.Name, watchSettings.CheckScript))
+		exitCode := runCheck(watchSettings.CheckScript)
 
-		return
+		fmt.Printf("Status %d\n", exitCode)
 	} else {
-		if permissions.IsExecutableCurrentUser(info) {
-			exitCode := runCheck(watchSettings.CheckScript)
-			fmt.Printf("Status %d\n", exitCode)
-		} else { // Make sure script is executable
-			logTool.WriteError(fmt.Sprintf("Execution permission denied: %s", watchSettings.CheckScript))
-			logTool.WriteInfo(fmt.Sprintf("Exiting watch %s", watchSettings.Name))
-			
-			return 
-		}
+		logTool.WriteError(fmt.Sprintf("Unable to execute script: %s", err))
 	}
 }
