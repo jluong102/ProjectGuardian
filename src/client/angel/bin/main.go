@@ -89,10 +89,10 @@ func main() {
 				
 				// Validate watches
 				for i, j := range masterConfig.Watches {
-					err := SetupWatch(j)
+					err := SetupWatch(j, i)
 
 					if err == nil {
-						logTool.WriteDebug(fmt.Sprintf("Watch %d", i))
+						logTool.WriteDebug(fmt.Sprintf("Watch %s", i))
 						ShowWatchSettings(logTool, j)
 					} else {
 						logTool.WriteError(fmt.Sprintf("Watch settings %d error: %s", i, err))

@@ -82,10 +82,12 @@ func ShowMasterSettings(logTool *logger.LogTool, masterSettings *Master) {
 	watchData.NoConsole = false	
 }*/
 
-func SetupWatch(watchData *Watch) error {
+func SetupWatch(watchData *Watch, name string) error {
 	if watchData.Interval < 1 {
 		return fmt.Errorf("Interval must be set to 1 minute or longer")
 	}
+
+	watchData.Name = name
 
 	return nil
 }

@@ -9,11 +9,11 @@ type Master struct {
 	NoWarning bool `json:"no_warning"` // Optional
 	NoError bool `json:"no_error"` // Optional
 	NoConsole bool `json:"no_console"` // Optional
-	Watches []*Watch `json:"watches"` // Required
+	Watches map[string]*Watch `json:"watches"` // Required
 }
 
 type Watch struct {
-	Name string `json:"name"` // Required
+	Name string `json:"name"` // Auto
 	Interval uint32 `json:"interval"` // Required
 	LogPath string `json:"log_path"` // Optional
 	Debug bool `json:"debug"` // Optional

@@ -7,9 +7,8 @@
   "no_error": false,
   "no_success": false,
   "no_console": false,
-  "watches": [
-    {
-      "name": "test",
+  "watches": {
+    "test": {
       "log_path": "./",
       "interval": 5,
       "debug": false,
@@ -27,5 +26,5 @@
       ],
       "check_script": "./examples/client/angel/check.sh"
     }
-  ]
+  }
 }
