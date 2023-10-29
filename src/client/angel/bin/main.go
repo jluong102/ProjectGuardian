@@ -22,7 +22,7 @@ type cmdline struct {
 	version bool
 }
 
-// Global vers declared in makefile
+// Global vars declared in makefile
 var VERSION string = "UNKNOWN"
 var BUILD_DATE string = "UNKNOWN"
 

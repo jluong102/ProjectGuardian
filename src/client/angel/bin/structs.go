@@ -27,3 +27,7 @@ type Watch struct {
 	FailureCodes []int32 `json:"failure_codes"` // Required
 	CheckScript string `json:"check_script"` // Required
 }
+
+type Remedies struct {
+
+}

@@ -87,7 +87,7 @@ func SetupWatch(watchData *Watch, name string) error {
 		return fmt.Errorf("Interval must be set to 1 minute or longer")
 	}
 
-	watchData.Name = name
+	watchData.Name = name // set name to match map name
 
 	return nil
 }
