@@ -19,6 +19,19 @@ import "github.com/jluong102/projectguardian/logger"
 type cmdline struct {
 	master string
 	debug bool
+	version bool
+}
+
+// Global vers declared in makefile
+var VERSION string = "UNKNOWN"
+var BUILD_DATE string = "UNKNOWN"
+
+func printVersion() {
+	fmt.Printf("***Project Guardian: Angel***\n")
+	fmt.Printf("\tVersion: %s\n", VERSION)
+	fmt.Printf("\tBuild Date: %s\n", BUILD_DATE)
+
+	os.Exit(NO_ERROR)
 }
 
 func checkArguments(cmdArgs *cmdline) error {
@@ -28,6 +41,7 @@ func checkArguments(cmdArgs *cmdline) error {
 	// Parse cmdline arguments
 	flag.StringVar(&cmdArgs.master, "config", "/etc/guardian/angel/master.json", "Master config file")
 	flag.BoolVar(&cmdArgs.debug, "debug", false, "Debugging output")
+	flag.BoolVar(&cmdArgs.version, "version", false, "Print current version")
 	flag.Parse()
 
 	return err
@@ -53,6 +67,10 @@ func main() {
 	logTool := logger.CreateLogger("angel")
 	logTool.LogLevel = logger.LOG_NONE // Disable logging until config is read
 	err := checkArguments(cmdArgs)
+
+	if cmdArgs.version {
+		printVersion()
+	}
 	
 	fmt.Printf("Initalizing...\n")
 

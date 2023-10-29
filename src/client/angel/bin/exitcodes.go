@@ -1,6 +1,7 @@
 package main
 
 const (
+	NO_ERROR = 0
 	ARGUMENT_PARSE_ERROR = 1
 	MASTER_CONFIG_ERROR = 2
 	JSON_PARSE_ERROR = 3
