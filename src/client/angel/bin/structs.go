@@ -13,7 +13,7 @@ type Master struct {
 }
 
 type Watch struct {
-	Name string `json:"name"` // Auto
+	Name string // Auto
 	Interval uint32 `json:"interval"` // Required
 	LogPath string `json:"log_path"` // Optional
 	Debug bool `json:"debug"` // Optional
@@ -26,8 +26,13 @@ type Watch struct {
 	SuccessCodes []int32 `json:"success_codes"` // Required
 	FailureCodes []int32 `json:"failure_codes"` // Required
 	CheckScript string `json:"check_script"` // Required
+	Remedies map[string]*Remedy // Required
 }
 
-type Remedies struct {
-
+type Remedy struct {
+	Name string // Auto
+	Attempts uint32 `json:"attempts"` // Required
+	Interval uint32 `json:"invterval"` // Required
+	OnCode []int32 `json:"on_code"` // Required
+	RemedyScript string // Auto
 }

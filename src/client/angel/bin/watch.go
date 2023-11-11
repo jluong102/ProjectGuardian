@@ -65,6 +65,48 @@ func runCheck(script string) int {
 	return 0
 }
 
+/*func runRemedy(watchSettings *Watch, exitCode int, logTool *logger.LogTool ) {
+	if remedy := findRemedy(watchSettings, exitCode); remedy != "" {
+
+	} else {
+		logTool.WriteInfo("No remedy found for code %d", exitCode)
+	}
+}
+*/
+/*func findRemedy(watchSettings *Watch, exitCode int) string {
+	for i, j := range watchSettings.Remedies {
+		if j.OnCode == exitCode {
+			return i
+		}
+	}
+
+	return "" // Empty string if nothing found
+}*/
+
+func checkSuccessCode(watchSettings *Watch, exitCode int) bool {
+	for _, i := range watchSettings.SuccessCodes {
+		if int(i) == exitCode {
+			fmt.Printf("Good\n")
+			// time.Sleep(time.Duration(watchSettings.Interval) * time.Minute)
+			return true
+		}
+	}
+
+	return false
+}
+
+func checkFailureCode(watchSettings *Watch, exitCode int) bool {
+	for _, i := range watchSettings.FailureCodes {
+		if int(i) == exitCode {
+			fmt.Printf("Bad\n")
+			// time.Sleep(time.Duration(watchSettings.Interval) * time.Minute)
+			return true
+		}
+	}
+
+	return false
+}
+
 func StartWatch(watchSettings *Watch) {
 	logTool := newLogger(watchSettings)
 
@@ -74,34 +116,14 @@ func StartWatch(watchSettings *Watch) {
 		if err := CheckExecutableScript(watchSettings.CheckScript); err == nil {
 			logTool.WriteInfo(fmt.Sprintf("%s => Running check script: %s", watchSettings.Name, watchSettings.CheckScript))
 			exitCode := runCheck(watchSettings.CheckScript)
-			codeFound := false
 
 			fmt.Printf("Status %d\n", exitCode)
 
-			for _, i := range watchSettings.SuccessCodes {
-				if int(i) == exitCode {
-					codeFound = true
-					fmt.Printf("good\n")
-					time.Sleep(time.Duration(watchSettings.Interval) * time.Minute)
-					break
-				}
+			if good := checkSuccessCode(watchSettings, exitCode); !good {
+				checkFailureCode(watchSettings, exitCode)
 			}
 
-			// Only check failure codes if no success codes are found
-			if !codeFound {
-				for _, i := range watchSettings.FailureCodes {
-					if int(i) == exitCode {
-						fmt.Printf("Bad\n")
-						time.Sleep(time.Duration(watchSettings.Interval) * time.Minute)
-						break
-					}
-				}
-			}
-		} else {
-			logTool.WriteError(fmt.Sprintf("Unable to execute script: %s", err))
-
-			// temporary 
-			return
+			time.Sleep(time.Duration(watchSettings.Interval) * time.Minute)
 		}
 	}
 }

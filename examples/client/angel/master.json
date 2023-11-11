@@ -21,10 +21,18 @@
       "success_codes": [
         0
       ],
-      "failure_codes": [
+        "failure_codes": [
         1
       ],
       "check_script": "./examples/client/angel/check.sh",
+      "remedies": {
+        "./examples/client/angel/remedy.sh":  { 
+          "attempts": 3,
+          "interval": 5,
+          "on_code": [
+            1
+          ]
+        }
       }
     }
   }
